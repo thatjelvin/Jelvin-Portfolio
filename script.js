@@ -33,14 +33,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Throttle function for scroll events
 function throttle(func, wait) {
-    let timeout;
+    let waiting = false;
     return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        if (!waiting) {
+            func.apply(this, args);
+            waiting = true;
+            setTimeout(() => {
+                waiting = false;
+            }, wait);
+        }
     };
 }
 
